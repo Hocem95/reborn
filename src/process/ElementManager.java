@@ -5,76 +5,93 @@ package process;
 import java.util.ArrayList;
 import java.util.List;
 
+import characters.Enemy;
+import characters.Reborn;
 import config.Config;
 import map.Block;
 import map.Map;
-import objet.Epee;
+import objet.Sword;
 import objet.Potion;
-import personnages.Ennemi;
-import personnages.Reborn;
 
 public class ElementManager {
 	private Map map;
 	Block position = new Block(0, 0);
 	
-	private List<Reborn> rebornList = new ArrayList<Reborn>();
-	private List<Ennemi> ennemiList = new ArrayList<Ennemi>();
-	private List<Potion> potionList = new ArrayList<Potion>();
-	private List<Epee> epeeList = new ArrayList<Epee>();
+	private Reborn reborn = new Reborn(position);
+	
+	private List<Enemy> enemies = new ArrayList<Enemy>();
+	private List<Potion> potions = new ArrayList<Potion>();
+	private List<Sword> epees = new ArrayList<Sword>();
 	
 	private int directionX;
 	private int directionY;
 	
+	private int i = 0;
+	
+	
 	public ElementManager(Map map) {
 		this.map = map;
+	}
+	
+	public void moveEnemy() 
+	{
+		i = i + 1;
+		Enemy enemy = enemies.get(0);
+		/*Block position = enemy.getPosition();
+		if (position.getColumn() < Config.nbColumns) {
+			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
+			if(hitbox(position) == 1) {
+				enemy.setPosition(newPosition);
+			}
+		}*/
 		
 	}
 	
 	public void moveLeftReborn() {
-		Block position = rebornList.get(0).getPosition();
-		Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
+		Block position = reborn.getPosition();
 		directionX = 0;
 		directionY = -1;
 		if (position.getColumn() > 0) {
+			Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
 			if(hitbox(position) == 1) {
-				rebornList.get(0).setPosition(newPosition);
+				reborn.setPosition(newPosition);
 			}
 
 		}
 	}
 
 	public void moveRightReborn() {
-		Block position = rebornList.get(0).getPosition();
-		Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
+		Block position = reborn.getPosition();
 		directionX = 0;
 		directionY = +1;
 		if (position.getColumn() < Config.nbColumns) {
+			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
 			if(hitbox(position) == 1) {
-				rebornList.get(0).setPosition(newPosition);
+				reborn.setPosition(newPosition);
 			}
 		}
 	}
 
 	public void moveUpReborn() {
-		Block position = rebornList.get(0).getPosition();
-		Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
+		Block position = reborn.getPosition();
 		directionX = -1;
 		directionY = 0;
 		if (position.getLine() > 0) {
+			Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
 			if(hitbox(position) == 1) {
-				rebornList.get(0).setPosition(newPosition);
+				reborn.setPosition(newPosition);
 			}
 		}
 	}
 
 	public void moveDownReborn() {
-		Block position = rebornList.get(0).getPosition();
-		Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
+		Block position = reborn.getPosition();
 		directionX = +1;
 		directionY = 0;
 		if (position.getLine() < Config.nbLines) {
+			Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
 			if(hitbox(position) == 1) {
-				rebornList.get(0).setPosition(newPosition);
+				reborn.setPosition(newPosition);
 			}
 		}
 	}
@@ -83,71 +100,72 @@ public class ElementManager {
 	public int hitbox(Block position){		
 		int verif = 0 ;
 		
-		// Cas potion
-		for(int i = 0; i<potionList.size();i++) {
-				if(((potionList.get(i).getPosition().getLine()) == position.getLine() + directionX)
-					&&(potionList.get(i).getPosition().getColumn()) == position.getColumn() + directionY) {
-					
-					// Le personnage principal gagne un coeur si coeur inf�rieure � 5
-					if(rebornList.get(0).getNombreCoeur()<5) {
-						rebornList.get(0).setNombreCoeur(1);
-					}
-
-					verif = 1;
-				}
+		// Cas ennemi
+		for(int i = 0; i<enemies.size();i++) {
+			if(((enemies.get(i).getPosition().getLine()) == position.getLine() + directionX)
+				&&(enemies.get(i).getPosition().getColumn()) == position.getColumn() + directionY) {
+				// On vérifie si le personnage ne meurt pas suite aux dégats subis
+				if(reborn.getNbCoeurs()>0) {
+					reborn.decrNbCoeurs();
+				}// else{game over à coder}
+				verif = 1;
+			}
 		}
+		
+		// Cas potions
+		for(int i = 0; i<potions.size();i++) {
+			if(((potions.get(i).getPosition().getLine()) == position.getLine() + directionX)
+				&&(potions.get(i).getPosition().getColumn()) == position.getColumn() + directionY) {
+				// On vérifie si le personnage a déjà perdu des coeurs auquel cas il se soigne pas
+				if(reborn.getNbCoeurs()<5) {
+					reborn.incrNbCoeurs();
+				}// else{déjà full life}
+				verif = 1;
+			}
+		}
+		
 		if(verif == 0) {
 			return 1;		//Rien sur la route ou potion, il bouge
 		}else {
 			return 0;		//Obstacle sur la route, il ne bouge pas
 		} 
 	}
+
 	
 	
-	public void add(Reborn reborn) {
-		rebornList.add(reborn);
-		
-	}
-	
-	public void add(Ennemi ennemi) {
-		ennemiList.add(ennemi);
+	public void add(Enemy ennemi) {
+		enemies.add(ennemi);
 		
 	}
 	
 	public void add(Potion potion) {
-		potionList.add(potion);
+		potions.add(potion);
 	}
 	
-	public void add(Epee epee) {
-		epeeList.add(epee);
+	public void add(Sword epee) {
+		epees.add(epee);
 	}
 	
-	public List<Reborn> getReborn() {
-		return rebornList;
-	}
 	
-	public List<Ennemi> getEnnemi() {
-		return ennemiList;
+	public List<Enemy> getEnnemi() {
+		return enemies;
 	}
 	
 	public List<Potion> getPotion() {
-		return potionList;
+		return potions;
 	}
 	
-	public List<Epee> getEpee() {
-		return epeeList;
+	public List<Sword> getEpee() {
+		return epees;
 	}
 	
-	public void generateReborn() {
-		
-		Reborn reborn = new Reborn(position);
-		add(reborn);
-		
+	public Reborn getReborn() {
+		return reborn;
 	}
 	
 	public void generateEnnemi() {
 			
-		Ennemi ennemi = new Ennemi(new Block(0,2));
+		Enemy ennemi = new Enemy(new Block(0,2));
 		add(ennemi);
 			
 	}
@@ -161,13 +179,11 @@ public class ElementManager {
 	
 	public void generateEpee() {
 	
-		Epee epee = new Epee(new Block(8,7));
+		Sword epee = new Sword(new Block(8,7));
 		add(epee);
 		
 	}
 		public void createMap() {
-		
-		generateReborn();
 		generateEnnemi();
 		generatePotion();
 		generateEpee();

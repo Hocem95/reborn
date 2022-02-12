@@ -10,7 +10,7 @@ public class Config {
 	public static int tailleBlock =40;		
 	public static final int GAME_SPEED =1000;
 
-
+	
 	
 	public static boolean init = true;
 	public static int generation = 0;

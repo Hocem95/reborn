@@ -25,14 +25,13 @@ import java.awt.FlowLayout;
 
 import config.Config;
 import map.Map;
-import objet.Epee;
+import objet.Sword;
 import process.ElementManager;
 import process.GameBuilder;
 
 public class Window extends JFrame implements Runnable, ActionListener {
 
 	private Display display;
-	private int lockKeys = -1;
 	private Map map;
 	private ElementManager manager;
 
@@ -48,7 +47,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 	
 	
 	// Cinq coeurs de vie du personnage principal
-	JLabel coeurLabel = new JLabel(coeur);
+	JLabel coeurLabelUn = new JLabel(coeur);
 	JLabel coeurLabelDeux = new JLabel(coeur);
 	JLabel coeurLabelTrois = new JLabel(coeur);
 	JLabel coeurLabelQuatre = new JLabel(coeur);
@@ -76,20 +75,21 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		
 		infobar.setPreferredSize(new Dimension(Config.tailleBlock*Config.nbColumns,5*Config.tailleBlock));
 		infobar.setBackground(Color.black);
+		infobar.setLayout(new FlowLayout(FlowLayout.RIGHT));	
 		
-		// commentaires ci-dessous très important pour la suite du dév
-		//coeurLabel.setHorizontalAlignment(SwingConstants.LEFT); // Places les coeurs à gauche de la barre d'information
+		// commentaires ci-dessous trï¿½s important pour la suite du dï¿½v
+		//coeurLabel.setHorizontalAlignment(SwingConstants.LEFT); // Places les coeurs ï¿½ gauche de la barre d'information
 		//coeurLabelDeux.setHorizontalAlignment(SwingConstants.LEFT);
-		infobar.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		// Coeurs codé en dur, à mettre en liste par la suite
-		infobar.add(coeurLabel);
+		
+		// Coeurs codï¿½ en dur, ï¿½ mettre en liste par la suite
+		infobar.add(coeurLabelUn);
 		infobar.add(coeurLabelDeux);
 		infobar.add(coeurLabelTrois);
 		infobar.add(coeurLabelQuatre);
 		infobar.add(coeurLabelCinq);
 		
-			
+		
 		contentPane.add(infobar, BorderLayout.NORTH);
 		
 		contentPane.add(display, BorderLayout.CENTER);
@@ -99,7 +99,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		this.setLayout(null);
 		this.setResizable(true);
 		
-		// Icone de la fenêtre
+		// Icone de la fenï¿½tre
 		Image icon = Toolkit.getDefaultToolkit().getImage("reborn.png");
 		this.setIconImage(icon);
 		
@@ -111,15 +111,8 @@ public class Window extends JFrame implements Runnable, ActionListener {
 
 	@Override
 	public void run() {
-		Config.generation = 1;
-		int génération = 0;
 		
-		// Génération de la map qu'une seule fois
-		while(génération==0){
-			
-			manager.createMap();
-			génération++;
-		}
+		manager.createMap();
 
 		while (turn == true) {
 			
@@ -128,8 +121,9 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
 			}
+			manager.moveEnemy();
 			display.repaint();
-
+			updateValues();
 			try {
 				Thread.sleep(1000 - Config.GAME_SPEED);
 			} catch (InterruptedException e) {
@@ -149,7 +143,6 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			switch (keyChar) {
 
 			case 'q':
-				
 					manager.moveLeftReborn();
 				
 				break;
@@ -186,5 +179,34 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	private void updateValues() {
+		int nbCoeursActuels = manager.getReborn().getNbCoeurs();
+		switch (nbCoeursActuels) {
+			case 5:
+				coeurLabelCinq.setVisible(true);
+				break;
+			case 4:
+				coeurLabelCinq.setVisible(false);
+				coeurLabelQuatre.setVisible(true);
+				break;
+			case 3:
+				coeurLabelQuatre.setVisible(false);
+				coeurLabelTrois.setVisible(true);
+				break;
+			case 2:
+				coeurLabelTrois.setVisible(false);
+				coeurLabelDeux.setVisible(true);
+				break;
+			case 1:
+				coeurLabelDeux.setVisible(false);
+				coeurLabelUn.setVisible(true);
+				break;
+			case 0:
+				coeurLabelUn.setVisible(false);
+				break;
+		}
+	}
+	
 
 }

@@ -4,11 +4,11 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import characters.Enemy;
+import characters.Reborn;
 import map.Map;
-import objet.Epee;
+import objet.Sword;
 import objet.Potion;
-import personnages.Ennemi;
-import personnages.Reborn;
 import process.ElementManager;
 
 public class Display extends JPanel {
@@ -30,25 +30,22 @@ public class Display extends JPanel {
 
 		
 		//Dessine le personnage principal
-		for (Reborn reborn : manager.getReborn()) {
-			paintStrategy.paint(reborn, g);
+		paintStrategy.paint(manager.getReborn(), g);
 		
-		}
 		
-		//Dessine les ennemis présent dans la liste
-		for (Ennemi ennemi : manager.getEnnemi()) {
+		//Dessine les ennemis prï¿½sent dans la liste
+		for (Enemy ennemi : manager.getEnnemi()) {
 			paintStrategy.paint(ennemi, g);
 		
 		}
 		
-		//Dessine les potions présent dans la liste
+		//Dessine les potions prï¿½sent dans la liste
 		for (Potion potion : manager.getPotion()) {
 			paintStrategy.paint(potion, g);
-		
 		}
 		
-		//Dessine les épées présent dans la liste
-		for (Epee epee : manager.getEpee()) {
+		//Dessine les ï¿½pï¿½es prï¿½sent dans la liste
+		for (Sword epee : manager.getEpee()) {
 			paintStrategy.paint(epee, g);
 		
 		}

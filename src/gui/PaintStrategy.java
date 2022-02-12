@@ -6,16 +6,16 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import characters.Enemy;
+import characters.Reborn;
 import config.Config;
 import map.Block;
 import map.Map;
-import objet.Epee;
+import objet.Sword;
 import objet.Potion;
 import obstacles.Arbre;
 import obstacles.Eau;
 import obstacles.Mur;
-import personnages.Ennemi;
-import personnages.Reborn;
 
 public class PaintStrategy {
 
@@ -66,7 +66,7 @@ public class PaintStrategy {
 
 	}
 	
-	public void paint(Ennemi ennemi, Graphics g) {
+	public void paint(Enemy ennemi, Graphics g) {
 		Block position = ennemi.getPosition();
 		int blockSize = Config.tailleBlock;
 		int y = position.getLine();
@@ -91,14 +91,14 @@ public class PaintStrategy {
 		g.drawImage(this.potion, x * blockSize, y * blockSize, blockSize, blockSize, null);
 		
 	}
-	public void paint(Epee epee, Graphics g) {
+	public void paint(Sword epee, Graphics g) {
 		Block position = epee.getPosition();
 		int blockSize = Config.tailleBlock;
 		int y = position.getLine();
 		int x = position.getColumn();
 		
 		
-		icoEpee = new ImageIcon("epee.png"); // image de l'épée
+		icoEpee = new ImageIcon("epee.png"); // image de l'ï¿½pï¿½e
 		this.epee = this.icoEpee.getImage();
 		
 		g.drawImage(this.epee, x * blockSize, y * blockSize, blockSize, blockSize, null);
