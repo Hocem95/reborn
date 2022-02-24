@@ -4,7 +4,7 @@ package config;
 public class Config {
 	
 	public static int nbColumns=40;
-	public static int nbLines=20;
+	public static int nbLines=25;
 
 	
 	public static int tailleBlock =40;		

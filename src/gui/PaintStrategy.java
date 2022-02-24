@@ -47,7 +47,7 @@ public class PaintStrategy {
 		for (int lineIndex = 0; lineIndex < map.getLineCount(); lineIndex++) {
 			for (int columnIndex = 0; columnIndex < map.getColumnCount(); columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
-				g.drawImage(this.herbe, lineIndex * blockSize, columnIndex * blockSize, blockSize, blockSize, null);
+				g.drawImage(this.herbe, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
 
 			}
 		}

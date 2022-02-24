@@ -9,6 +9,7 @@ public abstract class Element {
 
 		public Element(Block position) {
 			this.position = position;
+			position.setAvailable(false);
 		}
 
 		public Block getPosition() {
@@ -16,7 +17,9 @@ public abstract class Element {
 		}
 
 		public void setPosition(Block position) {
+			this.position.setAvailable(true);
 			this.position = position;
+			this.position.setAvailable(false);
 		}
 
 		public boolean getState() {

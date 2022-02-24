@@ -7,7 +7,7 @@ import map.Map;
 public class GameBuilder {
 
 	public static Map buildMap() {
-		return new Map(Config.nbColumns, Config.nbLines);
+		return new Map(Config.nbLines, Config.nbColumns);
 	}
 
 	public static ElementManager buildInitMobile(Map map) {
