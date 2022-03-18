@@ -24,33 +24,64 @@ public class PaintStrategy {
 	private ImageIcon icoReborn;
 	private Image reborn;
 
-	
 	private ImageIcon icoHerbe;
 	private Image herbe;
-	
+
+	private ImageIcon icoArbre;
+	private Image arbre;
+
+	private ImageIcon icoEau;
+	private Image eau;
+
+	private ImageIcon icoMur;
+	private Image mur;
+
 	private ImageIcon icoEnnemi;
 	private Image ennemi;
-	
+
 	private ImageIcon icoPotion;
 	private Image potion;
-	
+
 	private ImageIcon icoEpee;
 	private Image epee;
-	
+
 	public void paint(Map map, Graphics g) {
 		int blockSize = Config.tailleBlock;
-		Block[][] blocks = map.getBlocks();
-
+		int i = 0;
 		icoHerbe = new ImageIcon("herbe.png"); // image de l'herbe
 		this.herbe = this.icoHerbe.getImage();
 
+		icoEau = new ImageIcon("water.png"); // image de l'herbe
+		this.eau = this.icoEau.getImage();
+		icoArbre = new ImageIcon("arbre.png"); // image de l'herbe
+		this.arbre = this.icoArbre.getImage();
+		icoMur = new ImageIcon("mur.png"); // image de l'herbe
+		this.mur = this.icoMur.getImage();
+		
+		
+		
 		for (int lineIndex = 0; lineIndex < map.getLineCount(); lineIndex++) {
 			for (int columnIndex = 0; columnIndex < map.getColumnCount(); columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-				g.drawImage(this.herbe, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+				switch (Config.configMap[i]) {
+				case 0:
+					g.drawImage(this.herbe, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+					break;
+				case 1:
+					g.drawImage(this.herbe, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+					g.drawImage(this.arbre, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+					break;
+				case 2:
+					g.drawImage(this.eau, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+					break;
+				default :
+					g.drawImage(this.mur, columnIndex * blockSize, lineIndex * blockSize, blockSize, blockSize, null);
+					break;
+				}
+				i++;
 
 			}
 		}
+
 	}
 
 	public void paint(Reborn reborn, Graphics g) {
@@ -65,44 +96,44 @@ public class PaintStrategy {
 		g.drawImage(this.reborn, x * blockSize, y * blockSize, blockSize, blockSize, null);
 
 	}
-	
+
 	public void paint(Enemy ennemi, Graphics g) {
 		Block position = ennemi.getPosition();
 		int blockSize = Config.tailleBlock;
 		int y = position.getLine();
 		int x = position.getColumn();
 
-		icoEnnemi = new ImageIcon("intrus.png"); // image d'un ennemi 
+		icoEnnemi = new ImageIcon("intrus.png"); // image d'un ennemi
 		this.ennemi = this.icoEnnemi.getImage();
-		
+
 		g.drawImage(this.ennemi, x * blockSize, y * blockSize, blockSize, blockSize, null);
-		
+
 	}
-	
+
 	public void paint(Potion potion, Graphics g) {
 		Block position = potion.getPosition();
 		int blockSize = Config.tailleBlock;
 		int y = position.getLine();
 		int x = position.getColumn();
 
-		icoPotion = new ImageIcon("potion.png"); // image d'une potion 
+		icoPotion = new ImageIcon("potion.png"); // image d'une potion
 		this.potion = this.icoPotion.getImage();
-		
+
 		g.drawImage(this.potion, x * blockSize, y * blockSize, blockSize, blockSize, null);
-		
+
 	}
+
 	public void paint(Sword epee, Graphics g) {
 		Block position = epee.getPosition();
 		int blockSize = Config.tailleBlock;
 		int y = position.getLine();
 		int x = position.getColumn();
-		
-		
+
 		icoEpee = new ImageIcon("epee.png"); // image de l'�p�e
 		this.epee = this.icoEpee.getImage();
-		
+
 		g.drawImage(this.epee, x * blockSize, y * blockSize, blockSize, blockSize, null);
-		
+
 	}
 
 }

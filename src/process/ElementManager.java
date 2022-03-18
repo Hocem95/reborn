@@ -303,7 +303,7 @@ public class ElementManager {
 
 	public void generateEpee() {
 
-		Sword epee = new Sword(new Block(8, 7));
+		Sword epee = new Sword(new Block(2, 16));
 		add(epee);
 
 	}

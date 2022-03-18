@@ -58,5 +58,4 @@ public class Map {
 	public boolean isOnBorder(Block block) {
 		return isOnTop(block) || isOnBottom(block) || isOnLeftBorder(block) || isOnRightBorder(block);
 	}
-
 }
