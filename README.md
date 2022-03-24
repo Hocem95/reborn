@@ -1,7 +1,7 @@
 # Reborn
 ## _RPG_
 
-![N|Solid](https://raw.githubusercontent.com/Hocem95/reborn/main/reborn.png)
+![N|Solid](https://raw.githubusercontent.com/Hocem95/reborn/main/img/reborn.png)
 
 ## Contexte
 - Un jeu vidéo de rôle se jouant dans un monde qui contient des monstres, trésors, personnages, etc. Gestion des combats, des équipements et des attaques, etc. Support de séries de missions principales et secondaires.
