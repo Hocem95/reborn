@@ -1,4 +1,4 @@
-package obstacles;
+package objet;
 
 import map.Block;
 

@@ -25,11 +25,11 @@ Les liens README pour comprendre leur fonctionnement.
 
 ## Crédit
 Projet réalisé par :
-- BOUALLEG Hocem
-- BOURIN Paul
-- CHOUITEH Ayoub
-- PINTO DURAES Damien
-- ZAINOUL Meeriem
-- JAMAL Hajar
+- BOUALLEG Hocem (CHEF)
+- BOURIN Paul (MOE)
+- CHOUITEH Ayoub (MOA)
+- PINTO DURAES Damien (MOE)
+- ZAINOUL Meeriem (QA)
+- JAMAL Hajar (RVR)
 
 

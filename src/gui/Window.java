@@ -10,25 +10,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
-import java.awt.GridLayout;
 import java.awt.FlowLayout;
 
 import config.Config;
 import map.Map;
-import objet.Sword;
 import process.ElementManager;
 import process.GameBuilder;
 
+@SuppressWarnings("serial")
 public class Window extends JFrame implements Runnable, ActionListener {
 
 	private Display display;
@@ -40,10 +36,11 @@ public class Window extends JFrame implements Runnable, ActionListener {
 	private JPanel infobar = new JPanel();
 
 	ImageIcon coeur = new ImageIcon(
-			new ImageIcon("coeur.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+			new ImageIcon("img/coeur.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 	ImageIcon potion = new ImageIcon(
-			new ImageIcon("potion.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-	ImageIcon epee = new ImageIcon(new ImageIcon("epee.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+			new ImageIcon("img/potion.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+	ImageIcon epee = new ImageIcon(new ImageIcon("img/epee.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+	ImageIcon dragonBall = new ImageIcon(new ImageIcon("img/dragonBall4.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 	// Cinq coeurs de vie du personnage principal
 	JLabel coeurLabelUn = new JLabel(coeur);
 	JLabel coeurLabelDeux = new JLabel(coeur);
@@ -54,7 +51,8 @@ public class Window extends JFrame implements Runnable, ActionListener {
 	// Potion dans l'inventaire
 	JLabel potionInventaire = new JLabel(potion);
 	JLabel epeeInventaire = new JLabel(epee);
-
+	JLabel dragonBallInventaire = new JLabel(dragonBall);
+	
 	public Window(String title) {
 		super(title);
 		init();
@@ -76,14 +74,14 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		infobar.setPreferredSize(new Dimension(Config.tailleBlock * Config.nbColumns, 5 * Config.tailleBlock));
 		infobar.setBackground(Color.black);
 		infobar.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
+		
 		// commentaires ci-dessous tr�s important pour la suite du d�v
 		// coeurLabel.setHorizontalAlignment(SwingConstants.LEFT); // Places les coeurs
 		// � gauche de la barre d'information
 		// coeurLabelDeux.setHorizontalAlignment(SwingConstants.LEFT);
 
 		// Coeurs cod� en dur, � mettre en liste par la suite
-
+		
 		infobar.add(coeurLabelUn);
 		infobar.add(coeurLabelDeux);
 		infobar.add(coeurLabelTrois);
@@ -91,21 +89,24 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		infobar.add(coeurLabelCinq);
 		infobar.add(potionInventaire);
 		infobar.add(epeeInventaire);
+		infobar.add(dragonBallInventaire);
 
 		potionInventaire.setVisible(false);
 		epeeInventaire.setVisible(false);
-
+		dragonBallInventaire.setVisible(false);
+		
 		contentPane.add(infobar, BorderLayout.NORTH);
 
 		contentPane.add(display, BorderLayout.CENTER);
 
-		this.setSize(1600, 1200);
+
+		this.setSize(1620, 1200);
 		this.setVisible(true);
 		this.setLayout(null);
 		this.setResizable(true);
-
+		
 		// Icone de la fen�tre
-		Image icon = Toolkit.getDefaultToolkit().getImage("reborn.png");
+		Image icon = Toolkit.getDefaultToolkit().getImage("img/reborn.png");
 		this.setIconImage(icon);
 
 		textField.requestFocusInWindow();
@@ -130,7 +131,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			display.repaint();
 			updateValues();
 			try {
-				Thread.sleep(1000 - Config.GAME_SPEED);
+				Thread.sleep(Config.GAME_SPEED - Config.GAME_SPEED);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -163,14 +164,24 @@ public class Window extends JFrame implements Runnable, ActionListener {
 				manager.moveDownReborn();
 
 				break;
-			case 'k':
-				manager.attackReborn();
+			case '7':
+				manager.cheatKillAllReborn();
 
+				break;
+			case '8':
+				manager.cheatInvincibleReborn();
+
+				break;
+			case 'k':
+				if (manager.getReborn().getHasSword()) {
+					manager.attackReborn();
+				}
 				break;
 			case 'a':
 				if (manager.getReborn().getHasPotion()) {
 					manager.usePotion();
 				}
+				
 			default:
 				break;
 			}
@@ -240,7 +251,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			break;
 		}
 	}
-
+	
 	private void updateInventory() {
 		// Affichage potion dans l'inventaire
 		if (manager.getReborn().getHasPotion()) {
@@ -254,6 +265,12 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			epeeInventaire.setVisible(true);
 		} else {
 			epeeInventaire.setVisible(false);
+		}
+		
+		if (manager.getReborn().getHasDragonBall()) {
+			dragonBallInventaire.setVisible(true);
+		} else {
+			dragonBallInventaire.setVisible(false);
 		}
 	}
 

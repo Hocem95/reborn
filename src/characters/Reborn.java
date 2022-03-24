@@ -2,7 +2,7 @@ package characters;
 
 
 import map.Block;
-import obstacles.Element;
+import objet.Element;
 
 public class Reborn extends Element{
 	
@@ -10,6 +10,7 @@ public class Reborn extends Element{
 	public int nbCoeurs = 5;
 	public boolean hasPotion = false;
 	public boolean hasSword = false;
+	public boolean hasDragonBall = false;
 	
 	public Reborn(Block position) {
 		super(position);
@@ -42,5 +43,14 @@ public class Reborn extends Element{
 	public boolean getHasSword() {			// retourne un boolean indiquant si Reborn a une epee ou pas
 		return hasSword;
 	}
-	
+
+	public void pickUpDragonBall() {
+		this.hasDragonBall = true;
+	}
+	public void delDragonBall() {				// supprime la potion de l'inventaire de reborn qd elle est utilisee
+		this.hasDragonBall = false;
+	}
+	public boolean getHasDragonBall() {			// retourne un boolean indiquant si Reborn a une epee ou pas
+		return hasDragonBall;
+	}
 }

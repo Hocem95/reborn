@@ -1,7 +1,7 @@
 package characters;
 
 import map.Block;
-import obstacles.Element;
+import objet.Element;
 
 public class Enemy extends Element{
 	
