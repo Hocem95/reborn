@@ -93,14 +93,19 @@ public class PaintStrategy {
 
 		icoDialog = new ImageIcon("img/dialog.png");
 		this.dialog = this.icoDialog.getImage();
+		
 		icoHerbe = new ImageIcon("img/herbe.png");
 		this.herbe = this.icoHerbe.getImage();
+		
 		icoEau = new ImageIcon("img/water.png");
 		this.eau = this.icoEau.getImage();
+		
 		icoArbre = new ImageIcon("img/arbre.png");
 		this.arbre = this.icoArbre.getImage();
+		
 		icoMur = new ImageIcon("img/mur.png");
 		this.mur = this.icoMur.getImage();
+		
 		icoSand = new ImageIcon("img/sand.png");
 		this.sand = this.icoSand.getImage();
 
@@ -139,8 +144,10 @@ public class PaintStrategy {
 
 		icoWoodFloor = new ImageIcon("img/woodfloor.png");
 		this.woodfloor = this.icoWoodFloor.getImage();
+		
 		icoDungeonWall = new ImageIcon("img/dungeonwall.png");
 		this.dungeonWall = this.icoDungeonWall.getImage();
+		
 		icoDungeonFloor = new ImageIcon("img/dungeonfloor.png");
 		this.dungeonFloor = this.icoDungeonFloor.getImage();
 
@@ -311,7 +318,7 @@ public class PaintStrategy {
 
 		g.drawImage(this.dialog, npc.getPosition().getColumn() * 28, npc.getPosition().getLine() * 22 - 100, 400, 400,
 				null);
-		g.setFont(g.getFont().deriveFont(20f));
+		g.setFont(g.getFont().deriveFont(18f));
 		g.drawString(chaine[0], npc.getPosition().getColumn() * 28 + 70, npc.getPosition().getLine() * 42 - 100);
 		g.drawString(chaine[1], npc.getPosition().getColumn() * 28 + 70, npc.getPosition().getLine() * 42 - 60);
 	}
@@ -320,7 +327,7 @@ public class PaintStrategy {
 		String chaine[] = npc.getQuest().split("\n");
 
 		g.drawImage(this.dialog, npc.getPosition().getColumn() * 25, npc.getPosition().getLine() * 23, 400, 400, null);
-		g.setFont(g.getFont().deriveFont(20f));
+		g.setFont(g.getFont().deriveFont(18f));
 		g.drawString(chaine[0], npc.getPosition().getColumn() * 25 + 70, npc.getPosition().getLine() * 41 - 110);
 		g.drawString(chaine[1], npc.getPosition().getColumn() * 25 + 70, npc.getPosition().getLine() * 41 - 70);
 	}

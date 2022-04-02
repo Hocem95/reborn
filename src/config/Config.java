@@ -14,8 +14,8 @@ public class Config {
 	
 	public static boolean init = true;
 	public static int generation = 0;
-	// 0 Herbe ; 1 Arbre ; 2 Eau ; 3 murs ; 4 sable ; 5 barrières ; 6 bridge ; 7 mur dj ; 8 sol dj ; 9 fence vertical ; 10 fence droite ; 11 fence door ; 12 fence left
-	// 13 carrots ; 14 wheat ; 15 terre labourée ; 16 wood floor ; 17 vaches ; 18 poules
+	// 0 Herbe ; 1 Arbre ; 2 Eau ; 3 murs ; 4 sable ; 5 barriï¿½res ; 6 bridge ; 7 mur dj ; 8 sol dj ; 9 fence vertical ; 10 fence droite ; 11 fence door ; 12 fence left
+	// 13 carrots ; 14 wheat ; 15 terre labourï¿½e ; 16 wood floor ; 17 vaches ; 18 poules
 	// Pour reset tout 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	public static int[] configMap = { 
 			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

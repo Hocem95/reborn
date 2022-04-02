@@ -31,9 +31,12 @@ public class ElementManager {
 	private int directionY;
 
 	private int numberEnemyAlive;
+	
+	private MusicManager musicManager;
 
-	public ElementManager(Map map) {
+	public ElementManager(Map map, MusicManager musicManager) {
 		this.map = map;
+		this.musicManager = musicManager;
 	}
 
 	public void moveEnemies() {
@@ -72,7 +75,17 @@ public class ElementManager {
 					enemy.setDirection("right");
 				}
 			} else {
-				enemy.setDirection("right");
+				if (reborn.getPosition() == map.getBlock(l, c - 1)) {
+					reborn.setNbCoeurs(reborn.getNbCoeurs() - 1);
+					musicManager.upDateMusic("attack");
+					if(reborn.getNbCoeurs() == 1) {
+						musicManager.upDateMusic("heart");
+					}
+ 				}
+				
+				if (enemy.getMove() < enemy.getMaxMove()) {
+					enemy.setDirection("right");
+				}
 			}
 		}
 	}
@@ -90,7 +103,16 @@ public class ElementManager {
 					enemy.setDirection("left");
 				}
 			} else {
-				enemy.setDirection("left");
+				if (reborn.getPosition() == map.getBlock(l, c+1)) {
+					reborn.setNbCoeurs(reborn.getNbCoeurs() - 1);
+					musicManager.upDateMusic("attack");
+					if(reborn.getNbCoeurs() == 1) {
+						musicManager.upDateMusic("heart");
+					}
+				}
+				if(enemy.getMove()>0) {
+					enemy.setDirection("left");
+				}
 			}
 		}
 	}
@@ -108,7 +130,16 @@ public class ElementManager {
 					enemy.setDirection("down");
 				}
 			} else {
-				enemy.setDirection("down");
+				if (reborn.getPosition() == map.getBlock(l - 1, c)) {
+					reborn.setNbCoeurs(reborn.getNbCoeurs() - 1);
+					musicManager.upDateMusic("attack");
+					if(reborn.getNbCoeurs() == 1) {
+						musicManager.upDateMusic("heart");
+					}
+				}
+				if (enemy.getMove() < enemy.getMaxMove()) {
+					enemy.setDirection("down");
+				}
 			}
 		}
 	}
@@ -126,7 +157,16 @@ public class ElementManager {
 					enemy.setDirection("up");
 				}
 			} else {
-				enemy.setDirection("up");
+				if (reborn.getPosition() == map.getBlock(l + 1, c)) {
+					reborn.setNbCoeurs(reborn.getNbCoeurs() - 1);
+					musicManager.upDateMusic("attack");
+					if(reborn.getNbCoeurs() == 1) {
+						musicManager.upDateMusic("heart");
+					}
+				}
+				if (enemy.getMove() > 0) {
+					enemy.setDirection("up");
+				}
 			}
 		}
 	}
@@ -139,6 +179,7 @@ public class ElementManager {
 			Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
 			if (hitbox(position) == 1 && isAvailable(newPosition) == true) {
 				reborn.setPosition(newPosition);
+				newPosition.setAvailable(false);
 			}
 
 		}
@@ -148,10 +189,11 @@ public class ElementManager {
 		Block position = reborn.getPosition();
 		directionX = 0;
 		directionY = +1;
-		if (position.getColumn() < Config.nbColumns) {
+		if (position.getColumn() < Config.nbColumns && position.getColumn() + 1 <Config.nbColumns) {
 			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
 			if (hitbox(position) == 1 && isAvailable(newPosition) == true) {
 				reborn.setPosition(newPosition);
+				newPosition.setAvailable(false);
 			}
 		}
 	}
@@ -160,10 +202,11 @@ public class ElementManager {
 		Block position = reborn.getPosition();
 		directionX = -1;
 		directionY = 0;
-		if (position.getLine() > 0) {
+		if (position.getLine() > 0 ) {
 			Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
 			if (hitbox(position) == 1 && isAvailable(newPosition) == true) {
 				reborn.setPosition(newPosition);
+				newPosition.setAvailable(false);
 			}
 		}
 	}
@@ -172,10 +215,12 @@ public class ElementManager {
 		Block position = reborn.getPosition();
 		directionX = +1;
 		directionY = 0;
-		if (position.getLine() < Config.nbLines) {
+		if (position.getLine() < Config.nbLines && position.getLine() + 1 <Config.nbLines) {
+			
 			Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
 			if (hitbox(position) == 1 && isAvailable(newPosition) == true) {
 				reborn.setPosition(newPosition);
+				newPosition.setAvailable(false);
 			}
 		}
 	}
@@ -197,14 +242,14 @@ public class ElementManager {
 					npc.setQuestFinish(true);
 					npc.setQuest("Erf... je suppose que tu es \ndevenu suffisamment fort...");
 				} else if (!npc.isQuestFinish() && !firstTimeSeeingNPC) {
-					npc.setQuest("Tu n'as toujours pas r�ussi ?\nLa honte.");
+					npc.setQuest("Tu n'as toujours pas réussi ?\nLa honte.");
 				}
 			}
 			if (npc.getNom() == "goku" && npc.isQuestTake()) {
 				if (reborn.getHasDragonBall() && !npc.isQuestFinish()) {
 					npc.setQuestFinish(true);
 					reborn.delDragonBall();
-					npc.setQuest("Merci de m'avoir ramen� \nma boule de cristal !");
+					npc.setQuest("Merci de m'avoir ramené \nma boule de cristal !");
 				} else if (!npc.isQuestFinish() && !firstTimeSeeingNPC) {
 					npc.setQuest("Tu ne la trouves pas? \nElle se trouve dans le donjon !");
 				}
@@ -220,7 +265,7 @@ public class ElementManager {
 			enemyIterator.remove();
 		}
 	}
-
+	
 	public void cheatInvincibleReborn() {
 		if (reborn.getNbCoeurs() < 5) {
 			reborn.setNbCoeurs(5);
@@ -240,13 +285,13 @@ public class ElementManager {
 			if (position.getLine() > 0) {
 				inRangePositions.add(map.getBlock(position.getLine() - 1, position.getColumn()));
 			}
-			if (position.getLine() < map.getLineCount()) {
+			if (position.getLine() < map.getLineCount() && position.getLine() + 1 < Config.nbLines) {
 				inRangePositions.add(map.getBlock(position.getLine() + 1, position.getColumn()));
 			}
 			if (position.getColumn() > 0) {
 				inRangePositions.add(map.getBlock(position.getLine(), position.getColumn() - 1));
 			}
-			if (position.getColumn() < map.getColumnCount()) {
+			if (position.getColumn() < map.getColumnCount()&& position.getColumn() + 1 < Config.nbColumns) {
 				inRangePositions.add(map.getBlock(position.getLine(), position.getColumn() + 1));
 			}
 			// Checking if the enemy is in range
@@ -273,13 +318,14 @@ public class ElementManager {
 			if (position.getLine() > 0) {
 				inRangePositions.add(map.getBlock(position.getLine() - 1, position.getColumn()));
 			}
-			if (position.getLine() < map.getLineCount()) {
-				inRangePositions.add(map.getBlock(position.getLine() + 1, position.getColumn()));
+			if (position.getLine() < map.getLineCount() && position.getLine() + 1 < Config.nbLines) {
+					inRangePositions.add(map.getBlock(position.getLine() + 1, position.getColumn()));
+				
 			}
 			if (position.getColumn() > 0) {
 				inRangePositions.add(map.getBlock(position.getLine(), position.getColumn() - 1));
 			}
-			if (position.getColumn() < map.getColumnCount()) {
+			if (position.getColumn() < map.getColumnCount() && position.getColumn() + 1 < Config.nbColumns) {
 				inRangePositions.add(map.getBlock(position.getLine(), position.getColumn() + 1));
 			}
 			// Checking if the npc is in range
@@ -344,6 +390,7 @@ public class ElementManager {
 			if (((epees.get(i).getPosition().getLine()) == position.getLine() + directionX)
 					&& (epees.get(i).getPosition().getColumn()) == position.getColumn() + directionY) {
 				reborn.pickUpSword();
+				musicManager.upDateMusic("sword");
 				epees.remove(i);
 				verif = 1;
 			}
@@ -372,26 +419,37 @@ public class ElementManager {
 		}
 	}
 
-	public boolean isAvailable(Block block) {
+	public Boolean isAvailable(Block block) {
 		int index = block.getColumn() + Config.nbColumns * block.getLine();
 		int val[] = Config.configMap;
+		Boolean retour = false;
 
 		switch (val[index]) {
 		case 0: // Herbe
-			return true;
+			retour = true;
+			break;
 		case 4: // Sable
-			return true;
+			retour = true;
+			break;
 		case 8: // Sol dj
-			return true;
+			retour = true;
+			break;
 		case 15: // terre labour�e
-			return true;
+			retour = true;
+			break;
 		case 6: // pont
-			return true;
+			retour = true;
+			break;
 		case 16: // sol maison
-			return true;
+			retour = true;
+			break;
 		default:
-			return false;
+			retour = false;
 		}
+		if (reborn.getPosition() == block) {
+			retour = true;
+		}
+		return retour;
 	}
 
 	public void add(Enemy ennemi) {

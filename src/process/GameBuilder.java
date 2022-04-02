@@ -10,8 +10,8 @@ public class GameBuilder {
 		return new Map(Config.nbLines, Config.nbColumns);
 	}
 
-	public static ElementManager buildInitMobile(Map map) {
-		ElementManager manager = new ElementManager(map);
+	public static ElementManager buildInitMobile(Map map, MusicManager musicManager) {
+		ElementManager manager = new ElementManager(map,musicManager);
 		return manager;
 	}
 }

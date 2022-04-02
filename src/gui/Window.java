@@ -10,8 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,24 +25,37 @@ import config.Config;
 import map.Map;
 import process.ElementManager;
 import process.GameBuilder;
+import process.MusicManager;
 
-@SuppressWarnings("serial")
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
+
 public class Window extends JFrame implements Runnable, ActionListener {
 
 	private Display display;
 	private Map map;
 	private ElementManager manager;
-
+	private MusicManager music;
+	
 	private boolean turn = true; // variable qui permet de faire tourner le programme ou non (thread)
-
+	
 	private JPanel infobar = new JPanel();
+
+	// Fenêtre de fin du jeu en cas de défaite
+	private JDialog gameOver = new JDialog(this, "Défaite");
 
 	ImageIcon coeur = new ImageIcon(
 			new ImageIcon("img/coeur.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 	ImageIcon potion = new ImageIcon(
 			new ImageIcon("img/potion.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-	ImageIcon epee = new ImageIcon(new ImageIcon("img/epee.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-	ImageIcon dragonBall = new ImageIcon(new ImageIcon("img/dragonBall4.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+	ImageIcon epee = new ImageIcon(
+			new ImageIcon("img/epee.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+	ImageIcon dragonBall = new ImageIcon(
+			new ImageIcon("img/dragonball4.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+	
+	//Image du bouton de défaite dans la dernière frame
+	ImageIcon gameOverPicture = new ImageIcon("img/gameOverPicture.jpg");
+
 	// Cinq coeurs de vie du personnage principal
 	JLabel coeurLabelUn = new JLabel(coeur);
 	JLabel coeurLabelDeux = new JLabel(coeur);
@@ -52,7 +67,9 @@ public class Window extends JFrame implements Runnable, ActionListener {
 	JLabel potionInventaire = new JLabel(potion);
 	JLabel epeeInventaire = new JLabel(epee);
 	JLabel dragonBallInventaire = new JLabel(dragonBall);
-	
+
+	private JButton boutonFermeture; // Boutton fermeture du jeu dans le JDialog GameOver
+
 	public Window(String title) {
 		super(title);
 		init();
@@ -66,22 +83,23 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		textField.addKeyListener(keyControls);
 		contentPane.add(textField, BorderLayout.SOUTH);
 		map = GameBuilder.buildMap();
-		manager = GameBuilder.buildInitMobile(map);
+		music = new MusicManager();
+		manager = GameBuilder.buildInitMobile(map, music);
 		display = new Display(map, manager);
-
+		
 		// Barre d'info
 
 		infobar.setPreferredSize(new Dimension(Config.tailleBlock * Config.nbColumns, 5 * Config.tailleBlock));
 		infobar.setBackground(Color.black);
 		infobar.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
+
 		// commentaires ci-dessous trï¿½s important pour la suite du dï¿½v
 		// coeurLabel.setHorizontalAlignment(SwingConstants.LEFT); // Places les coeurs
 		// ï¿½ gauche de la barre d'information
 		// coeurLabelDeux.setHorizontalAlignment(SwingConstants.LEFT);
 
 		// Coeurs codï¿½ en dur, ï¿½ mettre en liste par la suite
-		
+
 		infobar.add(coeurLabelUn);
 		infobar.add(coeurLabelDeux);
 		infobar.add(coeurLabelTrois);
@@ -94,17 +112,16 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		potionInventaire.setVisible(false);
 		epeeInventaire.setVisible(false);
 		dragonBallInventaire.setVisible(false);
-		
+
 		contentPane.add(infobar, BorderLayout.NORTH);
 
 		contentPane.add(display, BorderLayout.CENTER);
-
 
 		this.setSize(1620, 1200);
 		this.setVisible(true);
 		this.setLayout(null);
 		this.setResizable(true);
-		
+
 		// Icone de la fenï¿½tre
 		Image icon = Toolkit.getDefaultToolkit().getImage("img/reborn.png");
 		this.setIconImage(icon);
@@ -120,8 +137,25 @@ public class Window extends JFrame implements Runnable, ActionListener {
 
 		manager.createMap();
 
+		/*try {
+			// Lances l'écoute de la musique de fond
+			music.playMusicBackground("ambiance");
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
 		while (turn == true) {
 
+			// GameOver Frame (numbers of heart == 0)
+			if (manager.getReborn().getNbCoeurs() == 0) {
+				turn = false;
+				
+				//Lancement de la frame de défaite
+				initFrameGameOver();
+				
+				//On coupe la musique de fond
+				music.stopMusicBackGround();
+			}
 			try {
 				Thread.sleep(Config.GAME_SPEED);
 			} catch (InterruptedException e) {
@@ -135,6 +169,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 
 		}
 
@@ -166,6 +201,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 				break;
 			case '7':
 				manager.cheatKillAllReborn();
+				music.upDateMusic("bazooka");
 
 				break;
 			case '8':
@@ -181,7 +217,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 				if (manager.getReborn().getHasPotion()) {
 					manager.usePotion();
 				}
-				
+
 			default:
 				break;
 			}
@@ -201,10 +237,13 @@ public class Window extends JFrame implements Runnable, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
+		if (e.getSource() == (boutonFermeture)) {
+			System.exit(0);// Fermeture du JEU
+		}
 	}
 
-	private void updateHP() {
+	public void updateHP() {
+
 		int nbCoeursActuels = manager.getReborn().getNbCoeurs();
 		switch (nbCoeursActuels) {
 		case 5:
@@ -243,16 +282,35 @@ public class Window extends JFrame implements Runnable, ActionListener {
 			coeurLabelUn.setVisible(true);
 			break;
 		case 0:
+
 			coeurLabelCinq.setVisible(false);
 			coeurLabelQuatre.setVisible(false);
 			coeurLabelTrois.setVisible(false);
 			coeurLabelDeux.setVisible(false);
 			coeurLabelUn.setVisible(false);
+
 			break;
 		}
 	}
-	
-	private void updateInventory() {
+
+	public void initFrameGameOver() {
+
+		this.setVisible(false);
+		gameOver.setVisible(true);
+		gameOver.setSize(1280, 720);
+		gameOver.addWindowListener(new Closing());
+
+		//////////////////////////////// FENETRE DE FIN ////////////////////////////////
+		boutonFermeture = new JButton(gameOverPicture);
+		boutonFermeture.addActionListener(this);
+
+		music.stopMusicBackGround();
+		gameOver.add(boutonFermeture);
+		music.stopMusicBackGround();
+
+	}
+		
+	public void updateInventory() {
 		// Affichage potion dans l'inventaire
 		if (manager.getReborn().getHasPotion()) {
 			potionInventaire.setVisible(true);
@@ -266,7 +324,7 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		} else {
 			epeeInventaire.setVisible(false);
 		}
-		
+
 		if (manager.getReborn().getHasDragonBall()) {
 			dragonBallInventaire.setVisible(true);
 		} else {
@@ -274,9 +332,15 @@ public class Window extends JFrame implements Runnable, ActionListener {
 		}
 	}
 
-	private void updateValues() {
+	public void updateValues() {
 		updateHP();
 		updateInventory();
+	}
+	
+	private class Closing extends WindowAdapter {
+		public void windowClosing(WindowEvent e) {
+			System.exit(1);
+		}
 	}
 
 }

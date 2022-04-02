@@ -7,14 +7,14 @@ public class NPC extends Element{
 	
 	String nom;
 	
-	//Quête finie ou non
+	//Quï¿½te finie ou non
 	private boolean questFinish=false;
 	
-	//Quête prit par l'utilisateur
+	//Quï¿½te prise par l'utilisateur
 	private boolean questTake=false;
 	
-	//Contenu de la quête
-	private  String quest= "";
+	//Contenu de la quï¿½te
+	private String quest;
 	
 	public NPC(Block position) {
 		super(position);
